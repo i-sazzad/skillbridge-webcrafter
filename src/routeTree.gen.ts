@@ -20,6 +20,7 @@ import { Route as AuthenticatedInstitutionIndexRouteImport } from './routes/_aut
 import { Route as AuthenticatedStudentPlanRouteImport } from './routes/_authenticated/student.plan'
 import { Route as AuthenticatedStudentExplorerRouteImport } from './routes/_authenticated/student.explorer'
 import { Route as AuthenticatedStudentCoachRouteImport } from './routes/_authenticated/student.coach'
+import { Route as AuthenticatedInstitutionAnalyticsRouteImport } from './routes/_authenticated/institution.analytics'
 
 const AuthRoute = AuthRouteImport.update({
   id: '/auth',
@@ -81,6 +82,12 @@ const AuthenticatedStudentCoachRoute =
     path: '/coach',
     getParentRoute: () => AuthenticatedStudentRoute,
   } as any)
+const AuthenticatedInstitutionAnalyticsRoute =
+  AuthenticatedInstitutionAnalyticsRouteImport.update({
+    id: '/analytics',
+    path: '/analytics',
+    getParentRoute: () => AuthenticatedInstitutionRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -88,6 +95,7 @@ export interface FileRoutesByFullPath {
   '/dashboard': typeof AuthenticatedDashboardRoute
   '/institution': typeof AuthenticatedInstitutionRouteWithChildren
   '/student': typeof AuthenticatedStudentRouteWithChildren
+  '/institution/analytics': typeof AuthenticatedInstitutionAnalyticsRoute
   '/student/coach': typeof AuthenticatedStudentCoachRoute
   '/student/explorer': typeof AuthenticatedStudentExplorerRoute
   '/student/plan': typeof AuthenticatedStudentPlanRoute
@@ -98,6 +106,7 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
+  '/institution/analytics': typeof AuthenticatedInstitutionAnalyticsRoute
   '/student/coach': typeof AuthenticatedStudentCoachRoute
   '/student/explorer': typeof AuthenticatedStudentExplorerRoute
   '/student/plan': typeof AuthenticatedStudentPlanRoute
@@ -112,6 +121,7 @@ export interface FileRoutesById {
   '/_authenticated/dashboard': typeof AuthenticatedDashboardRoute
   '/_authenticated/institution': typeof AuthenticatedInstitutionRouteWithChildren
   '/_authenticated/student': typeof AuthenticatedStudentRouteWithChildren
+  '/_authenticated/institution/analytics': typeof AuthenticatedInstitutionAnalyticsRoute
   '/_authenticated/student/coach': typeof AuthenticatedStudentCoachRoute
   '/_authenticated/student/explorer': typeof AuthenticatedStudentExplorerRoute
   '/_authenticated/student/plan': typeof AuthenticatedStudentPlanRoute
@@ -126,6 +136,7 @@ export interface FileRouteTypes {
     | '/dashboard'
     | '/institution'
     | '/student'
+    | '/institution/analytics'
     | '/student/coach'
     | '/student/explorer'
     | '/student/plan'
@@ -136,6 +147,7 @@ export interface FileRouteTypes {
     | '/'
     | '/auth'
     | '/dashboard'
+    | '/institution/analytics'
     | '/student/coach'
     | '/student/explorer'
     | '/student/plan'
@@ -149,6 +161,7 @@ export interface FileRouteTypes {
     | '/_authenticated/dashboard'
     | '/_authenticated/institution'
     | '/_authenticated/student'
+    | '/_authenticated/institution/analytics'
     | '/_authenticated/student/coach'
     | '/_authenticated/student/explorer'
     | '/_authenticated/student/plan'
@@ -241,15 +254,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedStudentCoachRouteImport
       parentRoute: typeof AuthenticatedStudentRoute
     }
+    '/_authenticated/institution/analytics': {
+      id: '/_authenticated/institution/analytics'
+      path: '/analytics'
+      fullPath: '/institution/analytics'
+      preLoaderRoute: typeof AuthenticatedInstitutionAnalyticsRouteImport
+      parentRoute: typeof AuthenticatedInstitutionRoute
+    }
   }
 }
 
 interface AuthenticatedInstitutionRouteChildren {
+  AuthenticatedInstitutionAnalyticsRoute: typeof AuthenticatedInstitutionAnalyticsRoute
   AuthenticatedInstitutionIndexRoute: typeof AuthenticatedInstitutionIndexRoute
 }
 
 const AuthenticatedInstitutionRouteChildren: AuthenticatedInstitutionRouteChildren =
   {
+    AuthenticatedInstitutionAnalyticsRoute:
+      AuthenticatedInstitutionAnalyticsRoute,
     AuthenticatedInstitutionIndexRoute: AuthenticatedInstitutionIndexRoute,
   }
 
