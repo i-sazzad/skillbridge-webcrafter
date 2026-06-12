@@ -82,7 +82,7 @@ export const Route = createFileRoute("/api/coach")({
               `Target role: ${spRow.job_roles?.title ?? "—"} (${spRow.job_roles?.sector ?? "—"})`,
               "",
               "Current skills (1-5):",
-              ...((skills ?? []) as Array<{
+              ...((skills ?? []) as unknown as Array<{
                 proficiency: number;
                 skills: { name: string; category: string; demand_index: number };
               }>).map(
@@ -91,7 +91,7 @@ export const Route = createFileRoute("/api/coach")({
               ),
               "",
               "Target role requirements:",
-              ...((roleSkills ?? []) as Array<{
+              ...((roleSkills ?? []) as unknown as Array<{
                 required_proficiency: number;
                 weight: number;
                 skills: { name: string; demand_index: number };
