@@ -59,7 +59,7 @@ function CoachPage() {
 
   const send = (text: string) => {
     const t = text.trim();
-    if (!t || busy || !transport) return;
+    if (!t || busy || !token) return;
     void sendMessage({ text: t });
     setInput("");
   };
