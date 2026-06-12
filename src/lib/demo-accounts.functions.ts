@@ -15,51 +15,60 @@ export const ensureDemoAccount = createServerFn({ method: "POST" })
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
     const demo = DEMOS[data.role];
 
-    // Try to find existing user
     const { data: list } = await supabaseAdmin.auth.admin.listUsers({ page: 1, perPage: 200 });
-    const existing = list?.users.find((u) => u.email === demo.email);
+    let user = list?.users.find((u) => u.email === demo.email);
 
-    if (!existing) {
-      const { error: createErr } = await supabaseAdmin.auth.admin.createUser({
+    if (!user) {
+      const { data: created, error: createErr } = await supabaseAdmin.auth.admin.createUser({
         email: demo.email,
         password: DEMO_PASSWORD,
         email_confirm: true,
         user_metadata: { full_name: demo.full_name, role: data.role },
       });
       if (createErr) throw new Error(createErr.message);
+      user = created.user ?? undefined;
     } else {
-      // Reset password so demo always works
-      await supabaseAdmin.auth.admin.updateUserById(existing.id, { password: DEMO_PASSWORD });
+      await supabaseAdmin.auth.admin.updateUserById(user.id, { password: DEMO_PASSWORD });
     }
 
-    // For student, ensure a student_profile exists pointing at first institution + a target role
-    if (data.role === "student") {
-      const { data: u } = await supabaseAdmin.auth.admin.listUsers({ page: 1, perPage: 200 });
-      const me = u?.users.find((x) => x.email === demo.email);
-      if (me) {
-        const { data: inst } = await supabaseAdmin.from("institutions").select("id").limit(1).maybeSingle();
+    if (data.role === "student" && user) {
+      const { data: prof } = await supabaseAdmin
+        .from("profiles")
+        .select("id")
+        .eq("user_id", user.id)
+        .maybeSingle();
+      if (prof) {
         const { data: prog } = await supabaseAdmin.from("programs").select("id").limit(1).maybeSingle();
         const { data: role } = await supabaseAdmin.from("job_roles").select("id").limit(1).maybeSingle();
-        await supabaseAdmin.from("student_profiles").upsert(
-          {
-            user_id: me.id,
-            institution_id: inst?.id ?? null,
-            program_id: prog?.id ?? null,
-            target_role_id: role?.id ?? null,
-          },
-          { onConflict: "user_id" },
-        );
-        // Seed a few baseline skills if none
-        const { count } = await supabaseAdmin
-          .from("student_skills")
-          .select("*", { count: "exact", head: true })
-          .eq("user_id", me.id);
-        if (!count) {
-          const { data: skills } = await supabaseAdmin.from("skills").select("id").limit(6);
-          if (skills?.length) {
-            await supabaseAdmin.from("student_skills").insert(
-              skills.map((s, i) => ({ user_id: me.id, skill_id: s.id, proficiency: 2 + (i % 3) })),
-            );
+        const { data: sp } = await supabaseAdmin
+          .from("student_profiles")
+          .upsert(
+            {
+              profile_id: prof.id,
+              program_id: prog?.id ?? null,
+              target_role_id: role?.id ?? null,
+              grad_year: 2026,
+            } as never,
+            { onConflict: "profile_id" },
+          )
+          .select("id")
+          .maybeSingle();
+        if (sp) {
+          const { count } = await supabaseAdmin
+            .from("student_skills")
+            .select("*", { count: "exact", head: true })
+            .eq("student_id", sp.id);
+          if (!count) {
+            const { data: skills } = await supabaseAdmin.from("skills").select("id").limit(6);
+            if (skills?.length) {
+              await supabaseAdmin.from("student_skills").insert(
+                skills.map((s, i) => ({
+                  student_id: sp.id,
+                  skill_id: s.id,
+                  proficiency: 2 + (i % 3),
+                })),
+              );
+            }
           }
         }
       }
