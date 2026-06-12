@@ -31,12 +31,10 @@ function CoachPage() {
 
   const transport = useMemo(
     () =>
-      token
-        ? new DefaultChatTransport({
-            api: "/api/coach",
-            headers: { Authorization: `Bearer ${token}` },
-          })
-        : undefined,
+      new DefaultChatTransport({
+        api: "/api/coach",
+        headers: () => (token ? { Authorization: `Bearer ${token}` } : {}),
+      }),
     [token],
   );
 
@@ -44,6 +42,7 @@ function CoachPage() {
     id: "coach",
     transport,
   });
+
 
   const [input, setInput] = useState("");
   const inputRef = useRef<HTMLTextAreaElement>(null);
