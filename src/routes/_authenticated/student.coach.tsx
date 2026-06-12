@@ -33,7 +33,7 @@ function CoachPage() {
     () =>
       new DefaultChatTransport({
         api: "/api/coach",
-        headers: () => (token ? { Authorization: `Bearer ${token}` } : {}),
+        headers: () => (token ? { Authorization: `Bearer ${token}` } : ({} as Record<string, string>)),
       }),
     [token],
   );
