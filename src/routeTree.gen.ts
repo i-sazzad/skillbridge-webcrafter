@@ -25,6 +25,7 @@ import { Route as AuthenticatedStudentCoachRouteImport } from './routes/_authent
 import { Route as AuthenticatedInstitutionOutcomesRouteImport } from './routes/_authenticated/institution.outcomes'
 import { Route as AuthenticatedInstitutionAnalyticsRouteImport } from './routes/_authenticated/institution.analytics'
 import { Route as AuthenticatedEmployerPostRouteImport } from './routes/_authenticated/employer.post'
+import { Route as AuthenticatedEmployerMatchesRouteImport } from './routes/_authenticated/employer.matches'
 
 const AuthRoute = AuthRouteImport.update({
   id: '/auth',
@@ -115,6 +116,12 @@ const AuthenticatedEmployerPostRoute =
     path: '/post',
     getParentRoute: () => AuthenticatedEmployerRoute,
   } as any)
+const AuthenticatedEmployerMatchesRoute =
+  AuthenticatedEmployerMatchesRouteImport.update({
+    id: '/matches',
+    path: '/matches',
+    getParentRoute: () => AuthenticatedEmployerRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -123,6 +130,7 @@ export interface FileRoutesByFullPath {
   '/employer': typeof AuthenticatedEmployerRouteWithChildren
   '/institution': typeof AuthenticatedInstitutionRouteWithChildren
   '/student': typeof AuthenticatedStudentRouteWithChildren
+  '/employer/matches': typeof AuthenticatedEmployerMatchesRoute
   '/employer/post': typeof AuthenticatedEmployerPostRoute
   '/institution/analytics': typeof AuthenticatedInstitutionAnalyticsRoute
   '/institution/outcomes': typeof AuthenticatedInstitutionOutcomesRoute
@@ -137,6 +145,7 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
+  '/employer/matches': typeof AuthenticatedEmployerMatchesRoute
   '/employer/post': typeof AuthenticatedEmployerPostRoute
   '/institution/analytics': typeof AuthenticatedInstitutionAnalyticsRoute
   '/institution/outcomes': typeof AuthenticatedInstitutionOutcomesRoute
@@ -156,6 +165,7 @@ export interface FileRoutesById {
   '/_authenticated/employer': typeof AuthenticatedEmployerRouteWithChildren
   '/_authenticated/institution': typeof AuthenticatedInstitutionRouteWithChildren
   '/_authenticated/student': typeof AuthenticatedStudentRouteWithChildren
+  '/_authenticated/employer/matches': typeof AuthenticatedEmployerMatchesRoute
   '/_authenticated/employer/post': typeof AuthenticatedEmployerPostRoute
   '/_authenticated/institution/analytics': typeof AuthenticatedInstitutionAnalyticsRoute
   '/_authenticated/institution/outcomes': typeof AuthenticatedInstitutionOutcomesRoute
@@ -175,6 +185,7 @@ export interface FileRouteTypes {
     | '/employer'
     | '/institution'
     | '/student'
+    | '/employer/matches'
     | '/employer/post'
     | '/institution/analytics'
     | '/institution/outcomes'
@@ -189,6 +200,7 @@ export interface FileRouteTypes {
     | '/'
     | '/auth'
     | '/dashboard'
+    | '/employer/matches'
     | '/employer/post'
     | '/institution/analytics'
     | '/institution/outcomes'
@@ -207,6 +219,7 @@ export interface FileRouteTypes {
     | '/_authenticated/employer'
     | '/_authenticated/institution'
     | '/_authenticated/student'
+    | '/_authenticated/employer/matches'
     | '/_authenticated/employer/post'
     | '/_authenticated/institution/analytics'
     | '/_authenticated/institution/outcomes'
@@ -338,15 +351,24 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedEmployerPostRouteImport
       parentRoute: typeof AuthenticatedEmployerRoute
     }
+    '/_authenticated/employer/matches': {
+      id: '/_authenticated/employer/matches'
+      path: '/matches'
+      fullPath: '/employer/matches'
+      preLoaderRoute: typeof AuthenticatedEmployerMatchesRouteImport
+      parentRoute: typeof AuthenticatedEmployerRoute
+    }
   }
 }
 
 interface AuthenticatedEmployerRouteChildren {
+  AuthenticatedEmployerMatchesRoute: typeof AuthenticatedEmployerMatchesRoute
   AuthenticatedEmployerPostRoute: typeof AuthenticatedEmployerPostRoute
   AuthenticatedEmployerIndexRoute: typeof AuthenticatedEmployerIndexRoute
 }
 
 const AuthenticatedEmployerRouteChildren: AuthenticatedEmployerRouteChildren = {
+  AuthenticatedEmployerMatchesRoute: AuthenticatedEmployerMatchesRoute,
   AuthenticatedEmployerPostRoute: AuthenticatedEmployerPostRoute,
   AuthenticatedEmployerIndexRoute: AuthenticatedEmployerIndexRoute,
 }
