@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as ApiCoachRouteImport } from './routes/api/coach'
 import { Route as AuthenticatedStudentRouteImport } from './routes/_authenticated/student'
 import { Route as AuthenticatedInstitutionRouteImport } from './routes/_authenticated/institution'
 import { Route as AuthenticatedEmployerRouteImport } from './routes/_authenticated/employer'
@@ -39,6 +40,11 @@ const AuthenticatedRouteRoute = AuthenticatedRouteRouteImport.update({
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiCoachRoute = ApiCoachRouteImport.update({
+  id: '/api/coach',
+  path: '/api/coach',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AuthenticatedStudentRoute = AuthenticatedStudentRouteImport.update({
@@ -130,6 +136,7 @@ export interface FileRoutesByFullPath {
   '/employer': typeof AuthenticatedEmployerRouteWithChildren
   '/institution': typeof AuthenticatedInstitutionRouteWithChildren
   '/student': typeof AuthenticatedStudentRouteWithChildren
+  '/api/coach': typeof ApiCoachRoute
   '/employer/matches': typeof AuthenticatedEmployerMatchesRoute
   '/employer/post': typeof AuthenticatedEmployerPostRoute
   '/institution/analytics': typeof AuthenticatedInstitutionAnalyticsRoute
@@ -145,6 +152,7 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
+  '/api/coach': typeof ApiCoachRoute
   '/employer/matches': typeof AuthenticatedEmployerMatchesRoute
   '/employer/post': typeof AuthenticatedEmployerPostRoute
   '/institution/analytics': typeof AuthenticatedInstitutionAnalyticsRoute
@@ -165,6 +173,7 @@ export interface FileRoutesById {
   '/_authenticated/employer': typeof AuthenticatedEmployerRouteWithChildren
   '/_authenticated/institution': typeof AuthenticatedInstitutionRouteWithChildren
   '/_authenticated/student': typeof AuthenticatedStudentRouteWithChildren
+  '/api/coach': typeof ApiCoachRoute
   '/_authenticated/employer/matches': typeof AuthenticatedEmployerMatchesRoute
   '/_authenticated/employer/post': typeof AuthenticatedEmployerPostRoute
   '/_authenticated/institution/analytics': typeof AuthenticatedInstitutionAnalyticsRoute
@@ -185,6 +194,7 @@ export interface FileRouteTypes {
     | '/employer'
     | '/institution'
     | '/student'
+    | '/api/coach'
     | '/employer/matches'
     | '/employer/post'
     | '/institution/analytics'
@@ -200,6 +210,7 @@ export interface FileRouteTypes {
     | '/'
     | '/auth'
     | '/dashboard'
+    | '/api/coach'
     | '/employer/matches'
     | '/employer/post'
     | '/institution/analytics'
@@ -219,6 +230,7 @@ export interface FileRouteTypes {
     | '/_authenticated/employer'
     | '/_authenticated/institution'
     | '/_authenticated/student'
+    | '/api/coach'
     | '/_authenticated/employer/matches'
     | '/_authenticated/employer/post'
     | '/_authenticated/institution/analytics'
@@ -235,6 +247,7 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
   AuthRoute: typeof AuthRoute
+  ApiCoachRoute: typeof ApiCoachRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -258,6 +271,13 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/coach': {
+      id: '/api/coach'
+      path: '/api/coach'
+      fullPath: '/api/coach'
+      preLoaderRoute: typeof ApiCoachRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/_authenticated/student': {
@@ -436,6 +456,7 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
   AuthRoute: AuthRoute,
+  ApiCoachRoute: ApiCoachRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
