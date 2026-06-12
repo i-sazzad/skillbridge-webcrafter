@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { createServerClient } from "@supabase/ssr";
+import { createClient } from "@supabase/supabase-js";
 import { convertToModelMessages, streamText, type UIMessage } from "ai";
 import { createLovableAiGatewayProvider } from "@/lib/ai-gateway.server";
 
@@ -16,9 +16,9 @@ export const Route = createFileRoute("/api/coach")({
 
         const sbUrl = process.env.SUPABASE_URL!;
         const sbKey = process.env.SUPABASE_PUBLISHABLE_KEY!;
-        const supabase = createServerClient(sbUrl, sbKey, {
-          cookies: { getAll: () => [], setAll: () => {} },
+        const supabase = createClient(sbUrl, sbKey, {
           global: { headers: { Authorization: `Bearer ${token}` } },
+          auth: { persistSession: false, autoRefreshToken: false },
         });
 
         const { data: userData } = await supabase.auth.getUser();
@@ -117,7 +117,7 @@ ${context}`;
         const result = streamText({
           model,
           system,
-          messages: convertToModelMessages(body.messages),
+          messages: await convertToModelMessages(body.messages),
         });
 
         return result.toUIMessageStreamResponse({ originalMessages: body.messages });
