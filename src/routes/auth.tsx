@@ -15,8 +15,10 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { toast } from "sonner";
-import { Activity, ArrowLeft } from "lucide-react";
+import { Activity, ArrowLeft, GraduationCap, Building2, Briefcase } from "lucide-react";
 import { Link } from "@tanstack/react-router";
+import { useServerFn } from "@tanstack/react-start";
+import { ensureDemoAccount } from "@/lib/demo-accounts.functions";
 
 const searchSchema = z.object({
   mode: z.enum(["login", "signup"]).optional(),
