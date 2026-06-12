@@ -17,9 +17,11 @@ import { Route as AuthenticatedStudentRouteImport } from './routes/_authenticate
 import { Route as AuthenticatedInstitutionRouteImport } from './routes/_authenticated/institution'
 import { Route as AuthenticatedEmployerRouteImport } from './routes/_authenticated/employer'
 import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
+import { Route as AuthenticatedAdminRouteImport } from './routes/_authenticated/admin'
 import { Route as AuthenticatedStudentIndexRouteImport } from './routes/_authenticated/student.index'
 import { Route as AuthenticatedInstitutionIndexRouteImport } from './routes/_authenticated/institution.index'
 import { Route as AuthenticatedEmployerIndexRouteImport } from './routes/_authenticated/employer.index'
+import { Route as AuthenticatedAdminIndexRouteImport } from './routes/_authenticated/admin.index'
 import { Route as AuthenticatedStudentPlanRouteImport } from './routes/_authenticated/student.plan'
 import { Route as AuthenticatedStudentExplorerRouteImport } from './routes/_authenticated/student.explorer'
 import { Route as AuthenticatedStudentCoachRouteImport } from './routes/_authenticated/student.coach'
@@ -27,6 +29,9 @@ import { Route as AuthenticatedInstitutionOutcomesRouteImport } from './routes/_
 import { Route as AuthenticatedInstitutionAnalyticsRouteImport } from './routes/_authenticated/institution.analytics'
 import { Route as AuthenticatedEmployerPostRouteImport } from './routes/_authenticated/employer.post'
 import { Route as AuthenticatedEmployerMatchesRouteImport } from './routes/_authenticated/employer.matches'
+import { Route as AuthenticatedAdminSkillsRouteImport } from './routes/_authenticated/admin.skills'
+import { Route as AuthenticatedAdminSectorsRouteImport } from './routes/_authenticated/admin.sectors'
+import { Route as AuthenticatedAdminInstitutionsRouteImport } from './routes/_authenticated/admin.institutions'
 
 const AuthRoute = AuthRouteImport.update({
   id: '/auth',
@@ -68,6 +73,11 @@ const AuthenticatedDashboardRoute = AuthenticatedDashboardRouteImport.update({
   path: '/dashboard',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const AuthenticatedAdminRoute = AuthenticatedAdminRouteImport.update({
+  id: '/admin',
+  path: '/admin',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
 const AuthenticatedStudentIndexRoute =
   AuthenticatedStudentIndexRouteImport.update({
     id: '/',
@@ -86,6 +96,11 @@ const AuthenticatedEmployerIndexRoute =
     path: '/',
     getParentRoute: () => AuthenticatedEmployerRoute,
   } as any)
+const AuthenticatedAdminIndexRoute = AuthenticatedAdminIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => AuthenticatedAdminRoute,
+} as any)
 const AuthenticatedStudentPlanRoute =
   AuthenticatedStudentPlanRouteImport.update({
     id: '/plan',
@@ -128,15 +143,37 @@ const AuthenticatedEmployerMatchesRoute =
     path: '/matches',
     getParentRoute: () => AuthenticatedEmployerRoute,
   } as any)
+const AuthenticatedAdminSkillsRoute =
+  AuthenticatedAdminSkillsRouteImport.update({
+    id: '/skills',
+    path: '/skills',
+    getParentRoute: () => AuthenticatedAdminRoute,
+  } as any)
+const AuthenticatedAdminSectorsRoute =
+  AuthenticatedAdminSectorsRouteImport.update({
+    id: '/sectors',
+    path: '/sectors',
+    getParentRoute: () => AuthenticatedAdminRoute,
+  } as any)
+const AuthenticatedAdminInstitutionsRoute =
+  AuthenticatedAdminInstitutionsRouteImport.update({
+    id: '/institutions',
+    path: '/institutions',
+    getParentRoute: () => AuthenticatedAdminRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
+  '/admin': typeof AuthenticatedAdminRouteWithChildren
   '/dashboard': typeof AuthenticatedDashboardRoute
   '/employer': typeof AuthenticatedEmployerRouteWithChildren
   '/institution': typeof AuthenticatedInstitutionRouteWithChildren
   '/student': typeof AuthenticatedStudentRouteWithChildren
   '/api/coach': typeof ApiCoachRoute
+  '/admin/institutions': typeof AuthenticatedAdminInstitutionsRoute
+  '/admin/sectors': typeof AuthenticatedAdminSectorsRoute
+  '/admin/skills': typeof AuthenticatedAdminSkillsRoute
   '/employer/matches': typeof AuthenticatedEmployerMatchesRoute
   '/employer/post': typeof AuthenticatedEmployerPostRoute
   '/institution/analytics': typeof AuthenticatedInstitutionAnalyticsRoute
@@ -144,6 +181,7 @@ export interface FileRoutesByFullPath {
   '/student/coach': typeof AuthenticatedStudentCoachRoute
   '/student/explorer': typeof AuthenticatedStudentExplorerRoute
   '/student/plan': typeof AuthenticatedStudentPlanRoute
+  '/admin/': typeof AuthenticatedAdminIndexRoute
   '/employer/': typeof AuthenticatedEmployerIndexRoute
   '/institution/': typeof AuthenticatedInstitutionIndexRoute
   '/student/': typeof AuthenticatedStudentIndexRoute
@@ -153,6 +191,9 @@ export interface FileRoutesByTo {
   '/auth': typeof AuthRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
   '/api/coach': typeof ApiCoachRoute
+  '/admin/institutions': typeof AuthenticatedAdminInstitutionsRoute
+  '/admin/sectors': typeof AuthenticatedAdminSectorsRoute
+  '/admin/skills': typeof AuthenticatedAdminSkillsRoute
   '/employer/matches': typeof AuthenticatedEmployerMatchesRoute
   '/employer/post': typeof AuthenticatedEmployerPostRoute
   '/institution/analytics': typeof AuthenticatedInstitutionAnalyticsRoute
@@ -160,6 +201,7 @@ export interface FileRoutesByTo {
   '/student/coach': typeof AuthenticatedStudentCoachRoute
   '/student/explorer': typeof AuthenticatedStudentExplorerRoute
   '/student/plan': typeof AuthenticatedStudentPlanRoute
+  '/admin': typeof AuthenticatedAdminIndexRoute
   '/employer': typeof AuthenticatedEmployerIndexRoute
   '/institution': typeof AuthenticatedInstitutionIndexRoute
   '/student': typeof AuthenticatedStudentIndexRoute
@@ -169,11 +211,15 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
   '/auth': typeof AuthRoute
+  '/_authenticated/admin': typeof AuthenticatedAdminRouteWithChildren
   '/_authenticated/dashboard': typeof AuthenticatedDashboardRoute
   '/_authenticated/employer': typeof AuthenticatedEmployerRouteWithChildren
   '/_authenticated/institution': typeof AuthenticatedInstitutionRouteWithChildren
   '/_authenticated/student': typeof AuthenticatedStudentRouteWithChildren
   '/api/coach': typeof ApiCoachRoute
+  '/_authenticated/admin/institutions': typeof AuthenticatedAdminInstitutionsRoute
+  '/_authenticated/admin/sectors': typeof AuthenticatedAdminSectorsRoute
+  '/_authenticated/admin/skills': typeof AuthenticatedAdminSkillsRoute
   '/_authenticated/employer/matches': typeof AuthenticatedEmployerMatchesRoute
   '/_authenticated/employer/post': typeof AuthenticatedEmployerPostRoute
   '/_authenticated/institution/analytics': typeof AuthenticatedInstitutionAnalyticsRoute
@@ -181,6 +227,7 @@ export interface FileRoutesById {
   '/_authenticated/student/coach': typeof AuthenticatedStudentCoachRoute
   '/_authenticated/student/explorer': typeof AuthenticatedStudentExplorerRoute
   '/_authenticated/student/plan': typeof AuthenticatedStudentPlanRoute
+  '/_authenticated/admin/': typeof AuthenticatedAdminIndexRoute
   '/_authenticated/employer/': typeof AuthenticatedEmployerIndexRoute
   '/_authenticated/institution/': typeof AuthenticatedInstitutionIndexRoute
   '/_authenticated/student/': typeof AuthenticatedStudentIndexRoute
@@ -190,11 +237,15 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/auth'
+    | '/admin'
     | '/dashboard'
     | '/employer'
     | '/institution'
     | '/student'
     | '/api/coach'
+    | '/admin/institutions'
+    | '/admin/sectors'
+    | '/admin/skills'
     | '/employer/matches'
     | '/employer/post'
     | '/institution/analytics'
@@ -202,6 +253,7 @@ export interface FileRouteTypes {
     | '/student/coach'
     | '/student/explorer'
     | '/student/plan'
+    | '/admin/'
     | '/employer/'
     | '/institution/'
     | '/student/'
@@ -211,6 +263,9 @@ export interface FileRouteTypes {
     | '/auth'
     | '/dashboard'
     | '/api/coach'
+    | '/admin/institutions'
+    | '/admin/sectors'
+    | '/admin/skills'
     | '/employer/matches'
     | '/employer/post'
     | '/institution/analytics'
@@ -218,6 +273,7 @@ export interface FileRouteTypes {
     | '/student/coach'
     | '/student/explorer'
     | '/student/plan'
+    | '/admin'
     | '/employer'
     | '/institution'
     | '/student'
@@ -226,11 +282,15 @@ export interface FileRouteTypes {
     | '/'
     | '/_authenticated'
     | '/auth'
+    | '/_authenticated/admin'
     | '/_authenticated/dashboard'
     | '/_authenticated/employer'
     | '/_authenticated/institution'
     | '/_authenticated/student'
     | '/api/coach'
+    | '/_authenticated/admin/institutions'
+    | '/_authenticated/admin/sectors'
+    | '/_authenticated/admin/skills'
     | '/_authenticated/employer/matches'
     | '/_authenticated/employer/post'
     | '/_authenticated/institution/analytics'
@@ -238,6 +298,7 @@ export interface FileRouteTypes {
     | '/_authenticated/student/coach'
     | '/_authenticated/student/explorer'
     | '/_authenticated/student/plan'
+    | '/_authenticated/admin/'
     | '/_authenticated/employer/'
     | '/_authenticated/institution/'
     | '/_authenticated/student/'
@@ -308,6 +369,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedDashboardRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/admin': {
+      id: '/_authenticated/admin'
+      path: '/admin'
+      fullPath: '/admin'
+      preLoaderRoute: typeof AuthenticatedAdminRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/student/': {
       id: '/_authenticated/student/'
       path: '/'
@@ -328,6 +396,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/employer/'
       preLoaderRoute: typeof AuthenticatedEmployerIndexRouteImport
       parentRoute: typeof AuthenticatedEmployerRoute
+    }
+    '/_authenticated/admin/': {
+      id: '/_authenticated/admin/'
+      path: '/'
+      fullPath: '/admin/'
+      preLoaderRoute: typeof AuthenticatedAdminIndexRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
     }
     '/_authenticated/student/plan': {
       id: '/_authenticated/student/plan'
@@ -378,8 +453,46 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedEmployerMatchesRouteImport
       parentRoute: typeof AuthenticatedEmployerRoute
     }
+    '/_authenticated/admin/skills': {
+      id: '/_authenticated/admin/skills'
+      path: '/skills'
+      fullPath: '/admin/skills'
+      preLoaderRoute: typeof AuthenticatedAdminSkillsRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
+    '/_authenticated/admin/sectors': {
+      id: '/_authenticated/admin/sectors'
+      path: '/sectors'
+      fullPath: '/admin/sectors'
+      preLoaderRoute: typeof AuthenticatedAdminSectorsRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
+    '/_authenticated/admin/institutions': {
+      id: '/_authenticated/admin/institutions'
+      path: '/institutions'
+      fullPath: '/admin/institutions'
+      preLoaderRoute: typeof AuthenticatedAdminInstitutionsRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
   }
 }
+
+interface AuthenticatedAdminRouteChildren {
+  AuthenticatedAdminInstitutionsRoute: typeof AuthenticatedAdminInstitutionsRoute
+  AuthenticatedAdminSectorsRoute: typeof AuthenticatedAdminSectorsRoute
+  AuthenticatedAdminSkillsRoute: typeof AuthenticatedAdminSkillsRoute
+  AuthenticatedAdminIndexRoute: typeof AuthenticatedAdminIndexRoute
+}
+
+const AuthenticatedAdminRouteChildren: AuthenticatedAdminRouteChildren = {
+  AuthenticatedAdminInstitutionsRoute: AuthenticatedAdminInstitutionsRoute,
+  AuthenticatedAdminSectorsRoute: AuthenticatedAdminSectorsRoute,
+  AuthenticatedAdminSkillsRoute: AuthenticatedAdminSkillsRoute,
+  AuthenticatedAdminIndexRoute: AuthenticatedAdminIndexRoute,
+}
+
+const AuthenticatedAdminRouteWithChildren =
+  AuthenticatedAdminRoute._addFileChildren(AuthenticatedAdminRouteChildren)
 
 interface AuthenticatedEmployerRouteChildren {
   AuthenticatedEmployerMatchesRoute: typeof AuthenticatedEmployerMatchesRoute
@@ -436,6 +549,7 @@ const AuthenticatedStudentRouteWithChildren =
   AuthenticatedStudentRoute._addFileChildren(AuthenticatedStudentRouteChildren)
 
 interface AuthenticatedRouteRouteChildren {
+  AuthenticatedAdminRoute: typeof AuthenticatedAdminRouteWithChildren
   AuthenticatedDashboardRoute: typeof AuthenticatedDashboardRoute
   AuthenticatedEmployerRoute: typeof AuthenticatedEmployerRouteWithChildren
   AuthenticatedInstitutionRoute: typeof AuthenticatedInstitutionRouteWithChildren
@@ -443,6 +557,7 @@ interface AuthenticatedRouteRouteChildren {
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
+  AuthenticatedAdminRoute: AuthenticatedAdminRouteWithChildren,
   AuthenticatedDashboardRoute: AuthenticatedDashboardRoute,
   AuthenticatedEmployerRoute: AuthenticatedEmployerRouteWithChildren,
   AuthenticatedInstitutionRoute: AuthenticatedInstitutionRouteWithChildren,

@@ -15,15 +15,17 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { toast } from "sonner";
-import { Activity, ArrowLeft, GraduationCap, Building2, Briefcase } from "lucide-react";
+import { Activity, ArrowLeft, GraduationCap, Building2, Briefcase, ShieldCheck } from "lucide-react";
 import { Link } from "@tanstack/react-router";
 import { useServerFn } from "@tanstack/react-start";
 import { ensureDemoAccount } from "@/lib/demo-accounts.functions";
 
 const searchSchema = z.object({
   mode: z.enum(["login", "signup"]).optional(),
-  role: z.enum(["student", "institution", "employer"]).optional(),
+  role: z.enum(["student", "institution", "employer", "admin"]).optional(),
 });
+
+type Role = "student" | "institution" | "employer" | "admin";
 
 export const Route = createFileRoute("/auth")({
   validateSearch: searchSchema,
@@ -146,11 +148,11 @@ function LoginForm() {
   );
 }
 
-function SignupForm({ initialRole }: { initialRole: "student" | "institution" | "employer" }) {
+function SignupForm({ initialRole }: { initialRole: Role }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [name, setName] = useState("");
-  const [role, setRole] = useState<"student" | "institution" | "employer">(initialRole);
+  const [role, setRole] = useState<Role>(initialRole);
   const [busy, setBusy] = useState(false);
   const navigate = useNavigate();
 
@@ -182,13 +184,7 @@ function SignupForm({ initialRole }: { initialRole: "student" | "institution" | 
       </div>
       <div className="space-y-1.5">
         <Label htmlFor="su-email">Email</Label>
-        <Input
-          id="su-email"
-          type="email"
-          required
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-        />
+        <Input id="su-email" type="email" required value={email} onChange={(e) => setEmail(e.target.value)} />
       </div>
       <div className="space-y-1.5">
         <Label htmlFor="su-password">Password</Label>
@@ -203,7 +199,7 @@ function SignupForm({ initialRole }: { initialRole: "student" | "institution" | 
       </div>
       <div className="space-y-1.5">
         <Label>I am a…</Label>
-        <Select value={role} onValueChange={(v) => setRole(v as typeof role)}>
+        <Select value={role} onValueChange={(v) => setRole(v as Role)}>
           <SelectTrigger>
             <SelectValue />
           </SelectTrigger>
@@ -211,6 +207,7 @@ function SignupForm({ initialRole }: { initialRole: "student" | "institution" | 
             <SelectItem value="student">Student / Graduate</SelectItem>
             <SelectItem value="institution">Institution / Educator</SelectItem>
             <SelectItem value="employer">Employer / Recruiter</SelectItem>
+            <SelectItem value="admin">Administrator / Policymaker</SelectItem>
           </SelectContent>
         </Select>
       </div>
@@ -224,9 +221,9 @@ function SignupForm({ initialRole }: { initialRole: "student" | "institution" | 
 function DemoLauncher() {
   const navigate = useNavigate();
   const ensure = useServerFn(ensureDemoAccount);
-  const [busy, setBusy] = useState<null | "student" | "institution" | "employer">(null);
+  const [busy, setBusy] = useState<null | Role>(null);
 
-  const launch = async (role: "student" | "institution" | "employer") => {
+  const launch = async (role: Role) => {
     setBusy(role);
     try {
       const creds = await ensure({ data: { role } });
@@ -248,6 +245,7 @@ function DemoLauncher() {
     { role: "student" as const, label: "Student", icon: GraduationCap },
     { role: "institution" as const, label: "Institution", icon: Building2 },
     { role: "employer" as const, label: "Employer", icon: Briefcase },
+    { role: "admin" as const, label: "Admin", icon: ShieldCheck },
   ];
 
   return (
@@ -256,7 +254,7 @@ function DemoLauncher() {
         <p className="text-sm font-semibold">Try the live demo</p>
         <p className="text-xs text-muted-foreground">One click — no signup needed.</p>
       </div>
-      <div className="grid grid-cols-3 gap-2">
+      <div className="grid grid-cols-4 gap-2">
         {items.map(({ role, label, icon: Icon }) => (
           <Button
             key={role}
