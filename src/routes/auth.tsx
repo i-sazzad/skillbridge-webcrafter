@@ -79,7 +79,7 @@ function AuthPage() {
         >
           <ArrowLeft className="h-4 w-4" /> Back home
         </Link>
-        <div className="flex flex-1 items-center justify-center">
+        <div className="flex flex-1 flex-col items-center justify-center gap-6">
           <Card className="w-full max-w-md p-6">
             <Tabs value={tab} onValueChange={(v) => setTab(v as "login" | "signup")}>
               <TabsList className="grid w-full grid-cols-2">
@@ -94,7 +94,9 @@ function AuthPage() {
               </TabsContent>
             </Tabs>
           </Card>
+          <DemoLauncher />
         </div>
+
       </div>
     </div>
   );
@@ -216,3 +218,58 @@ function SignupForm({ initialRole }: { initialRole: "student" | "institution" | 
     </form>
   );
 }
+
+function DemoLauncher() {
+  const navigate = useNavigate();
+  const ensure = useServerFn(ensureDemoAccount);
+  const [busy, setBusy] = useState<null | "student" | "institution" | "employer">(null);
+
+  const launch = async (role: "student" | "institution" | "employer") => {
+    setBusy(role);
+    try {
+      const creds = await ensure({ data: { role } });
+      const { error } = await supabase.auth.signInWithPassword({
+        email: creds.email,
+        password: creds.password,
+      });
+      if (error) throw error;
+      toast.success(`Signed in as demo ${role}`);
+      navigate({ to: "/dashboard" });
+    } catch (e) {
+      toast.error(e instanceof Error ? e.message : "Demo sign-in failed");
+    } finally {
+      setBusy(null);
+    }
+  };
+
+  const items = [
+    { role: "student" as const, label: "Student", icon: GraduationCap },
+    { role: "institution" as const, label: "Institution", icon: Building2 },
+    { role: "employer" as const, label: "Employer", icon: Briefcase },
+  ];
+
+  return (
+    <Card className="w-full max-w-md p-5">
+      <div className="mb-3 text-center">
+        <p className="text-sm font-semibold">Try the live demo</p>
+        <p className="text-xs text-muted-foreground">One click — no signup needed.</p>
+      </div>
+      <div className="grid grid-cols-3 gap-2">
+        {items.map(({ role, label, icon: Icon }) => (
+          <Button
+            key={role}
+            variant="outline"
+            size="sm"
+            disabled={busy !== null}
+            onClick={() => launch(role)}
+            className="flex h-auto flex-col gap-1 py-3"
+          >
+            <Icon className="h-4 w-4" />
+            <span className="text-xs">{busy === role ? "…" : label}</span>
+          </Button>
+        ))}
+      </div>
+    </Card>
+  );
+}
+
