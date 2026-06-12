@@ -137,7 +137,7 @@ function Landing() {
           <div className="mx-auto max-w-3xl text-center">
             <div className="mx-auto inline-flex items-center gap-2 rounded-full border border-border bg-secondary/60 px-3 py-1 text-xs font-medium text-secondary-foreground">
               <Sparkles className="h-3.5 w-3.5 text-accent" />
-              Built for Bangladesh AI Build Fest 2026
+              Built for The Infinity AI Build Fest 2026
             </div>
             <h1 className="mt-6 text-4xl font-extrabold tracking-tight md:text-6xl">
               Teach what the market needs.{" "}
