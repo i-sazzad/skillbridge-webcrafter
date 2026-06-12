@@ -31,12 +31,10 @@ function CoachPage() {
 
   const transport = useMemo(
     () =>
-      token
-        ? new DefaultChatTransport({
-            api: "/api/coach",
-            headers: { Authorization: `Bearer ${token}` },
-          })
-        : undefined,
+      new DefaultChatTransport({
+        api: "/api/coach",
+        headers: () => (token ? { Authorization: `Bearer ${token}` } : ({} as Record<string, string>)),
+      }),
     [token],
   );
 
@@ -44,6 +42,7 @@ function CoachPage() {
     id: "coach",
     transport,
   });
+
 
   const [input, setInput] = useState("");
   const inputRef = useRef<HTMLTextAreaElement>(null);
@@ -60,7 +59,7 @@ function CoachPage() {
 
   const send = (text: string) => {
     const t = text.trim();
-    if (!t || busy || !transport) return;
+    if (!t || busy || !token) return;
     void sendMessage({ text: t });
     setInput("");
   };
