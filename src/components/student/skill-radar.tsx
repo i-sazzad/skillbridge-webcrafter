@@ -19,39 +19,40 @@ export function SkillRadar({ data }: { data: RadarPoint[] }) {
     <div className="h-[340px] w-full">
       <ResponsiveContainer width="100%" height="100%">
         <RadarChart data={data} outerRadius="78%">
-          <PolarGrid stroke="hsl(var(--border))" />
+          <PolarGrid stroke="var(--border)" />
           <PolarAngleAxis
             dataKey="skill"
-            tick={{ fill: "hsl(var(--muted-foreground))", fontSize: 11 }}
+            tick={{ fill: "var(--muted-foreground)", fontSize: 11 }}
           />
           <PolarRadiusAxis
             angle={90}
             domain={[0, 5]}
-            tick={{ fill: "hsl(var(--muted-foreground))", fontSize: 10 }}
-            stroke="hsl(var(--border))"
+            tick={{ fill: "var(--muted-foreground)", fontSize: 10 }}
+            stroke="var(--border)"
           />
           <Radar
             name="Target"
             dataKey="target"
-            stroke="hsl(var(--accent))"
-            fill="hsl(var(--accent))"
+            stroke="var(--accent)"
+            fill="var(--accent)"
             fillOpacity={0.15}
             strokeWidth={2}
           />
           <Radar
             name="You"
             dataKey="you"
-            stroke="hsl(var(--primary))"
-            fill="hsl(var(--primary))"
+            stroke="var(--primary)"
+            fill="var(--primary)"
             fillOpacity={0.4}
             strokeWidth={2}
           />
           <Tooltip
             contentStyle={{
-              background: "hsl(var(--card))",
-              border: "1px solid hsl(var(--border))",
+              background: "var(--card)",
+              border: "1px solid var(--border)",
               borderRadius: 10,
               fontSize: 12,
+              color: "var(--foreground)",
             }}
           />
         </RadarChart>
