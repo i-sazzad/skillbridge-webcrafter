@@ -15,6 +15,7 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as AuthenticatedStudentRouteImport } from './routes/_authenticated/student'
 import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
 import { Route as AuthenticatedStudentIndexRouteImport } from './routes/_authenticated/student.index'
+import { Route as AuthenticatedStudentExplorerRouteImport } from './routes/_authenticated/student.explorer'
 import { Route as AuthenticatedStudentCoachRouteImport } from './routes/_authenticated/student.coach'
 
 const AuthRoute = AuthRouteImport.update({
@@ -47,6 +48,12 @@ const AuthenticatedStudentIndexRoute =
     path: '/',
     getParentRoute: () => AuthenticatedStudentRoute,
   } as any)
+const AuthenticatedStudentExplorerRoute =
+  AuthenticatedStudentExplorerRouteImport.update({
+    id: '/explorer',
+    path: '/explorer',
+    getParentRoute: () => AuthenticatedStudentRoute,
+  } as any)
 const AuthenticatedStudentCoachRoute =
   AuthenticatedStudentCoachRouteImport.update({
     id: '/coach',
@@ -60,6 +67,7 @@ export interface FileRoutesByFullPath {
   '/dashboard': typeof AuthenticatedDashboardRoute
   '/student': typeof AuthenticatedStudentRouteWithChildren
   '/student/coach': typeof AuthenticatedStudentCoachRoute
+  '/student/explorer': typeof AuthenticatedStudentExplorerRoute
   '/student/': typeof AuthenticatedStudentIndexRoute
 }
 export interface FileRoutesByTo {
@@ -67,6 +75,7 @@ export interface FileRoutesByTo {
   '/auth': typeof AuthRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
   '/student/coach': typeof AuthenticatedStudentCoachRoute
+  '/student/explorer': typeof AuthenticatedStudentExplorerRoute
   '/student': typeof AuthenticatedStudentIndexRoute
 }
 export interface FileRoutesById {
@@ -77,6 +86,7 @@ export interface FileRoutesById {
   '/_authenticated/dashboard': typeof AuthenticatedDashboardRoute
   '/_authenticated/student': typeof AuthenticatedStudentRouteWithChildren
   '/_authenticated/student/coach': typeof AuthenticatedStudentCoachRoute
+  '/_authenticated/student/explorer': typeof AuthenticatedStudentExplorerRoute
   '/_authenticated/student/': typeof AuthenticatedStudentIndexRoute
 }
 export interface FileRouteTypes {
@@ -87,9 +97,16 @@ export interface FileRouteTypes {
     | '/dashboard'
     | '/student'
     | '/student/coach'
+    | '/student/explorer'
     | '/student/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/auth' | '/dashboard' | '/student/coach' | '/student'
+  to:
+    | '/'
+    | '/auth'
+    | '/dashboard'
+    | '/student/coach'
+    | '/student/explorer'
+    | '/student'
   id:
     | '__root__'
     | '/'
@@ -98,6 +115,7 @@ export interface FileRouteTypes {
     | '/_authenticated/dashboard'
     | '/_authenticated/student'
     | '/_authenticated/student/coach'
+    | '/_authenticated/student/explorer'
     | '/_authenticated/student/'
   fileRoutesById: FileRoutesById
 }
@@ -151,6 +169,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedStudentIndexRouteImport
       parentRoute: typeof AuthenticatedStudentRoute
     }
+    '/_authenticated/student/explorer': {
+      id: '/_authenticated/student/explorer'
+      path: '/explorer'
+      fullPath: '/student/explorer'
+      preLoaderRoute: typeof AuthenticatedStudentExplorerRouteImport
+      parentRoute: typeof AuthenticatedStudentRoute
+    }
     '/_authenticated/student/coach': {
       id: '/_authenticated/student/coach'
       path: '/coach'
@@ -163,11 +188,13 @@ declare module '@tanstack/react-router' {
 
 interface AuthenticatedStudentRouteChildren {
   AuthenticatedStudentCoachRoute: typeof AuthenticatedStudentCoachRoute
+  AuthenticatedStudentExplorerRoute: typeof AuthenticatedStudentExplorerRoute
   AuthenticatedStudentIndexRoute: typeof AuthenticatedStudentIndexRoute
 }
 
 const AuthenticatedStudentRouteChildren: AuthenticatedStudentRouteChildren = {
   AuthenticatedStudentCoachRoute: AuthenticatedStudentCoachRoute,
+  AuthenticatedStudentExplorerRoute: AuthenticatedStudentExplorerRoute,
   AuthenticatedStudentIndexRoute: AuthenticatedStudentIndexRoute,
 }
 
