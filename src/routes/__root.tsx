@@ -85,13 +85,19 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
         content:
           "Align education with employer demand in real time. AI career coach for students, curriculum analytics for institutions, pre-matched talent for employers.",
       },
-      { property: "og:title", content: "SkillBridge AI" },
+      { property: "og:title", content: "SkillBridge AI — Bangladesh's Labor Market Intelligence" },
       {
         property: "og:description",
         content: "Teach what the market needs. Learn what gets you hired.",
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
+      { name: "twitter:title", content: "SkillBridge AI — Bangladesh's Labor Market Intelligence" },
+      { name: "description", content: "SkillBridge Bangladesh is a workforce intelligence platform aligning education with labor market demand." },
+      { property: "og:description", content: "SkillBridge Bangladesh is a workforce intelligence platform aligning education with labor market demand." },
+      { name: "twitter:description", content: "SkillBridge Bangladesh is a workforce intelligence platform aligning education with labor market demand." },
+      { property: "og:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/69ac83b9-9c20-45ef-89f0-0fc2aad91e7b/id-preview-13d784e6--40cb7197-594e-4aca-87c6-872e854a1c4e.lovable.app-1781261109648.png" },
+      { name: "twitter:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/69ac83b9-9c20-45ef-89f0-0fc2aad91e7b/id-preview-13d784e6--40cb7197-594e-4aca-87c6-872e854a1c4e.lovable.app-1781261109648.png" },
     ],
     links: [
       { rel: "preconnect", href: "https://fonts.googleapis.com" },
