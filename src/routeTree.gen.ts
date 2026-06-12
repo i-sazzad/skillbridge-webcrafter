@@ -9,38 +9,250 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as AuthRouteImport } from './routes/auth'
+import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AuthenticatedStudentRouteImport } from './routes/_authenticated/student'
+import { Route as AuthenticatedInstitutionRouteImport } from './routes/_authenticated/institution'
+import { Route as AuthenticatedEmployerRouteImport } from './routes/_authenticated/employer'
+import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
+import { Route as AuthenticatedStudentIndexRouteImport } from './routes/_authenticated/student.index'
+import { Route as AuthenticatedInstitutionIndexRouteImport } from './routes/_authenticated/institution.index'
+import { Route as AuthenticatedEmployerIndexRouteImport } from './routes/_authenticated/employer.index'
+import { Route as AuthenticatedStudentPlanRouteImport } from './routes/_authenticated/student.plan'
+import { Route as AuthenticatedStudentExplorerRouteImport } from './routes/_authenticated/student.explorer'
+import { Route as AuthenticatedStudentCoachRouteImport } from './routes/_authenticated/student.coach'
+import { Route as AuthenticatedInstitutionOutcomesRouteImport } from './routes/_authenticated/institution.outcomes'
+import { Route as AuthenticatedInstitutionAnalyticsRouteImport } from './routes/_authenticated/institution.analytics'
+import { Route as AuthenticatedEmployerPostRouteImport } from './routes/_authenticated/employer.post'
+import { Route as AuthenticatedEmployerMatchesRouteImport } from './routes/_authenticated/employer.matches'
 
+const AuthRoute = AuthRouteImport.update({
+  id: '/auth',
+  path: '/auth',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuthenticatedRouteRoute = AuthenticatedRouteRouteImport.update({
+  id: '/_authenticated',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AuthenticatedStudentRoute = AuthenticatedStudentRouteImport.update({
+  id: '/student',
+  path: '/student',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedInstitutionRoute =
+  AuthenticatedInstitutionRouteImport.update({
+    id: '/institution',
+    path: '/institution',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedEmployerRoute = AuthenticatedEmployerRouteImport.update({
+  id: '/employer',
+  path: '/employer',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedDashboardRoute = AuthenticatedDashboardRouteImport.update({
+  id: '/dashboard',
+  path: '/dashboard',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedStudentIndexRoute =
+  AuthenticatedStudentIndexRouteImport.update({
+    id: '/',
+    path: '/',
+    getParentRoute: () => AuthenticatedStudentRoute,
+  } as any)
+const AuthenticatedInstitutionIndexRoute =
+  AuthenticatedInstitutionIndexRouteImport.update({
+    id: '/',
+    path: '/',
+    getParentRoute: () => AuthenticatedInstitutionRoute,
+  } as any)
+const AuthenticatedEmployerIndexRoute =
+  AuthenticatedEmployerIndexRouteImport.update({
+    id: '/',
+    path: '/',
+    getParentRoute: () => AuthenticatedEmployerRoute,
+  } as any)
+const AuthenticatedStudentPlanRoute =
+  AuthenticatedStudentPlanRouteImport.update({
+    id: '/plan',
+    path: '/plan',
+    getParentRoute: () => AuthenticatedStudentRoute,
+  } as any)
+const AuthenticatedStudentExplorerRoute =
+  AuthenticatedStudentExplorerRouteImport.update({
+    id: '/explorer',
+    path: '/explorer',
+    getParentRoute: () => AuthenticatedStudentRoute,
+  } as any)
+const AuthenticatedStudentCoachRoute =
+  AuthenticatedStudentCoachRouteImport.update({
+    id: '/coach',
+    path: '/coach',
+    getParentRoute: () => AuthenticatedStudentRoute,
+  } as any)
+const AuthenticatedInstitutionOutcomesRoute =
+  AuthenticatedInstitutionOutcomesRouteImport.update({
+    id: '/outcomes',
+    path: '/outcomes',
+    getParentRoute: () => AuthenticatedInstitutionRoute,
+  } as any)
+const AuthenticatedInstitutionAnalyticsRoute =
+  AuthenticatedInstitutionAnalyticsRouteImport.update({
+    id: '/analytics',
+    path: '/analytics',
+    getParentRoute: () => AuthenticatedInstitutionRoute,
+  } as any)
+const AuthenticatedEmployerPostRoute =
+  AuthenticatedEmployerPostRouteImport.update({
+    id: '/post',
+    path: '/post',
+    getParentRoute: () => AuthenticatedEmployerRoute,
+  } as any)
+const AuthenticatedEmployerMatchesRoute =
+  AuthenticatedEmployerMatchesRouteImport.update({
+    id: '/matches',
+    path: '/matches',
+    getParentRoute: () => AuthenticatedEmployerRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/auth': typeof AuthRoute
+  '/dashboard': typeof AuthenticatedDashboardRoute
+  '/employer': typeof AuthenticatedEmployerRouteWithChildren
+  '/institution': typeof AuthenticatedInstitutionRouteWithChildren
+  '/student': typeof AuthenticatedStudentRouteWithChildren
+  '/employer/matches': typeof AuthenticatedEmployerMatchesRoute
+  '/employer/post': typeof AuthenticatedEmployerPostRoute
+  '/institution/analytics': typeof AuthenticatedInstitutionAnalyticsRoute
+  '/institution/outcomes': typeof AuthenticatedInstitutionOutcomesRoute
+  '/student/coach': typeof AuthenticatedStudentCoachRoute
+  '/student/explorer': typeof AuthenticatedStudentExplorerRoute
+  '/student/plan': typeof AuthenticatedStudentPlanRoute
+  '/employer/': typeof AuthenticatedEmployerIndexRoute
+  '/institution/': typeof AuthenticatedInstitutionIndexRoute
+  '/student/': typeof AuthenticatedStudentIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/auth': typeof AuthRoute
+  '/dashboard': typeof AuthenticatedDashboardRoute
+  '/employer/matches': typeof AuthenticatedEmployerMatchesRoute
+  '/employer/post': typeof AuthenticatedEmployerPostRoute
+  '/institution/analytics': typeof AuthenticatedInstitutionAnalyticsRoute
+  '/institution/outcomes': typeof AuthenticatedInstitutionOutcomesRoute
+  '/student/coach': typeof AuthenticatedStudentCoachRoute
+  '/student/explorer': typeof AuthenticatedStudentExplorerRoute
+  '/student/plan': typeof AuthenticatedStudentPlanRoute
+  '/employer': typeof AuthenticatedEmployerIndexRoute
+  '/institution': typeof AuthenticatedInstitutionIndexRoute
+  '/student': typeof AuthenticatedStudentIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
+  '/auth': typeof AuthRoute
+  '/_authenticated/dashboard': typeof AuthenticatedDashboardRoute
+  '/_authenticated/employer': typeof AuthenticatedEmployerRouteWithChildren
+  '/_authenticated/institution': typeof AuthenticatedInstitutionRouteWithChildren
+  '/_authenticated/student': typeof AuthenticatedStudentRouteWithChildren
+  '/_authenticated/employer/matches': typeof AuthenticatedEmployerMatchesRoute
+  '/_authenticated/employer/post': typeof AuthenticatedEmployerPostRoute
+  '/_authenticated/institution/analytics': typeof AuthenticatedInstitutionAnalyticsRoute
+  '/_authenticated/institution/outcomes': typeof AuthenticatedInstitutionOutcomesRoute
+  '/_authenticated/student/coach': typeof AuthenticatedStudentCoachRoute
+  '/_authenticated/student/explorer': typeof AuthenticatedStudentExplorerRoute
+  '/_authenticated/student/plan': typeof AuthenticatedStudentPlanRoute
+  '/_authenticated/employer/': typeof AuthenticatedEmployerIndexRoute
+  '/_authenticated/institution/': typeof AuthenticatedInstitutionIndexRoute
+  '/_authenticated/student/': typeof AuthenticatedStudentIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths:
+    | '/'
+    | '/auth'
+    | '/dashboard'
+    | '/employer'
+    | '/institution'
+    | '/student'
+    | '/employer/matches'
+    | '/employer/post'
+    | '/institution/analytics'
+    | '/institution/outcomes'
+    | '/student/coach'
+    | '/student/explorer'
+    | '/student/plan'
+    | '/employer/'
+    | '/institution/'
+    | '/student/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to:
+    | '/'
+    | '/auth'
+    | '/dashboard'
+    | '/employer/matches'
+    | '/employer/post'
+    | '/institution/analytics'
+    | '/institution/outcomes'
+    | '/student/coach'
+    | '/student/explorer'
+    | '/student/plan'
+    | '/employer'
+    | '/institution'
+    | '/student'
+  id:
+    | '__root__'
+    | '/'
+    | '/_authenticated'
+    | '/auth'
+    | '/_authenticated/dashboard'
+    | '/_authenticated/employer'
+    | '/_authenticated/institution'
+    | '/_authenticated/student'
+    | '/_authenticated/employer/matches'
+    | '/_authenticated/employer/post'
+    | '/_authenticated/institution/analytics'
+    | '/_authenticated/institution/outcomes'
+    | '/_authenticated/student/coach'
+    | '/_authenticated/student/explorer'
+    | '/_authenticated/student/plan'
+    | '/_authenticated/employer/'
+    | '/_authenticated/institution/'
+    | '/_authenticated/student/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
+  AuthRoute: typeof AuthRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/auth': {
+      id: '/auth'
+      path: '/auth'
+      fullPath: '/auth'
+      preLoaderRoute: typeof AuthRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_authenticated': {
+      id: '/_authenticated'
+      path: ''
+      fullPath: '/'
+      preLoaderRoute: typeof AuthenticatedRouteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -48,22 +260,183 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_authenticated/student': {
+      id: '/_authenticated/student'
+      path: '/student'
+      fullPath: '/student'
+      preLoaderRoute: typeof AuthenticatedStudentRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/institution': {
+      id: '/_authenticated/institution'
+      path: '/institution'
+      fullPath: '/institution'
+      preLoaderRoute: typeof AuthenticatedInstitutionRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/employer': {
+      id: '/_authenticated/employer'
+      path: '/employer'
+      fullPath: '/employer'
+      preLoaderRoute: typeof AuthenticatedEmployerRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/dashboard': {
+      id: '/_authenticated/dashboard'
+      path: '/dashboard'
+      fullPath: '/dashboard'
+      preLoaderRoute: typeof AuthenticatedDashboardRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/student/': {
+      id: '/_authenticated/student/'
+      path: '/'
+      fullPath: '/student/'
+      preLoaderRoute: typeof AuthenticatedStudentIndexRouteImport
+      parentRoute: typeof AuthenticatedStudentRoute
+    }
+    '/_authenticated/institution/': {
+      id: '/_authenticated/institution/'
+      path: '/'
+      fullPath: '/institution/'
+      preLoaderRoute: typeof AuthenticatedInstitutionIndexRouteImport
+      parentRoute: typeof AuthenticatedInstitutionRoute
+    }
+    '/_authenticated/employer/': {
+      id: '/_authenticated/employer/'
+      path: '/'
+      fullPath: '/employer/'
+      preLoaderRoute: typeof AuthenticatedEmployerIndexRouteImport
+      parentRoute: typeof AuthenticatedEmployerRoute
+    }
+    '/_authenticated/student/plan': {
+      id: '/_authenticated/student/plan'
+      path: '/plan'
+      fullPath: '/student/plan'
+      preLoaderRoute: typeof AuthenticatedStudentPlanRouteImport
+      parentRoute: typeof AuthenticatedStudentRoute
+    }
+    '/_authenticated/student/explorer': {
+      id: '/_authenticated/student/explorer'
+      path: '/explorer'
+      fullPath: '/student/explorer'
+      preLoaderRoute: typeof AuthenticatedStudentExplorerRouteImport
+      parentRoute: typeof AuthenticatedStudentRoute
+    }
+    '/_authenticated/student/coach': {
+      id: '/_authenticated/student/coach'
+      path: '/coach'
+      fullPath: '/student/coach'
+      preLoaderRoute: typeof AuthenticatedStudentCoachRouteImport
+      parentRoute: typeof AuthenticatedStudentRoute
+    }
+    '/_authenticated/institution/outcomes': {
+      id: '/_authenticated/institution/outcomes'
+      path: '/outcomes'
+      fullPath: '/institution/outcomes'
+      preLoaderRoute: typeof AuthenticatedInstitutionOutcomesRouteImport
+      parentRoute: typeof AuthenticatedInstitutionRoute
+    }
+    '/_authenticated/institution/analytics': {
+      id: '/_authenticated/institution/analytics'
+      path: '/analytics'
+      fullPath: '/institution/analytics'
+      preLoaderRoute: typeof AuthenticatedInstitutionAnalyticsRouteImport
+      parentRoute: typeof AuthenticatedInstitutionRoute
+    }
+    '/_authenticated/employer/post': {
+      id: '/_authenticated/employer/post'
+      path: '/post'
+      fullPath: '/employer/post'
+      preLoaderRoute: typeof AuthenticatedEmployerPostRouteImport
+      parentRoute: typeof AuthenticatedEmployerRoute
+    }
+    '/_authenticated/employer/matches': {
+      id: '/_authenticated/employer/matches'
+      path: '/matches'
+      fullPath: '/employer/matches'
+      preLoaderRoute: typeof AuthenticatedEmployerMatchesRouteImport
+      parentRoute: typeof AuthenticatedEmployerRoute
+    }
   }
 }
 
+interface AuthenticatedEmployerRouteChildren {
+  AuthenticatedEmployerMatchesRoute: typeof AuthenticatedEmployerMatchesRoute
+  AuthenticatedEmployerPostRoute: typeof AuthenticatedEmployerPostRoute
+  AuthenticatedEmployerIndexRoute: typeof AuthenticatedEmployerIndexRoute
+}
+
+const AuthenticatedEmployerRouteChildren: AuthenticatedEmployerRouteChildren = {
+  AuthenticatedEmployerMatchesRoute: AuthenticatedEmployerMatchesRoute,
+  AuthenticatedEmployerPostRoute: AuthenticatedEmployerPostRoute,
+  AuthenticatedEmployerIndexRoute: AuthenticatedEmployerIndexRoute,
+}
+
+const AuthenticatedEmployerRouteWithChildren =
+  AuthenticatedEmployerRoute._addFileChildren(
+    AuthenticatedEmployerRouteChildren,
+  )
+
+interface AuthenticatedInstitutionRouteChildren {
+  AuthenticatedInstitutionAnalyticsRoute: typeof AuthenticatedInstitutionAnalyticsRoute
+  AuthenticatedInstitutionOutcomesRoute: typeof AuthenticatedInstitutionOutcomesRoute
+  AuthenticatedInstitutionIndexRoute: typeof AuthenticatedInstitutionIndexRoute
+}
+
+const AuthenticatedInstitutionRouteChildren: AuthenticatedInstitutionRouteChildren =
+  {
+    AuthenticatedInstitutionAnalyticsRoute:
+      AuthenticatedInstitutionAnalyticsRoute,
+    AuthenticatedInstitutionOutcomesRoute:
+      AuthenticatedInstitutionOutcomesRoute,
+    AuthenticatedInstitutionIndexRoute: AuthenticatedInstitutionIndexRoute,
+  }
+
+const AuthenticatedInstitutionRouteWithChildren =
+  AuthenticatedInstitutionRoute._addFileChildren(
+    AuthenticatedInstitutionRouteChildren,
+  )
+
+interface AuthenticatedStudentRouteChildren {
+  AuthenticatedStudentCoachRoute: typeof AuthenticatedStudentCoachRoute
+  AuthenticatedStudentExplorerRoute: typeof AuthenticatedStudentExplorerRoute
+  AuthenticatedStudentPlanRoute: typeof AuthenticatedStudentPlanRoute
+  AuthenticatedStudentIndexRoute: typeof AuthenticatedStudentIndexRoute
+}
+
+const AuthenticatedStudentRouteChildren: AuthenticatedStudentRouteChildren = {
+  AuthenticatedStudentCoachRoute: AuthenticatedStudentCoachRoute,
+  AuthenticatedStudentExplorerRoute: AuthenticatedStudentExplorerRoute,
+  AuthenticatedStudentPlanRoute: AuthenticatedStudentPlanRoute,
+  AuthenticatedStudentIndexRoute: AuthenticatedStudentIndexRoute,
+}
+
+const AuthenticatedStudentRouteWithChildren =
+  AuthenticatedStudentRoute._addFileChildren(AuthenticatedStudentRouteChildren)
+
+interface AuthenticatedRouteRouteChildren {
+  AuthenticatedDashboardRoute: typeof AuthenticatedDashboardRoute
+  AuthenticatedEmployerRoute: typeof AuthenticatedEmployerRouteWithChildren
+  AuthenticatedInstitutionRoute: typeof AuthenticatedInstitutionRouteWithChildren
+  AuthenticatedStudentRoute: typeof AuthenticatedStudentRouteWithChildren
+}
+
+const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
+  AuthenticatedDashboardRoute: AuthenticatedDashboardRoute,
+  AuthenticatedEmployerRoute: AuthenticatedEmployerRouteWithChildren,
+  AuthenticatedInstitutionRoute: AuthenticatedInstitutionRouteWithChildren,
+  AuthenticatedStudentRoute: AuthenticatedStudentRouteWithChildren,
+}
+
+const AuthenticatedRouteRouteWithChildren =
+  AuthenticatedRouteRoute._addFileChildren(AuthenticatedRouteRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
+  AuthRoute: AuthRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}
