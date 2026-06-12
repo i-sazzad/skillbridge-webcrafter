@@ -9,16 +9,21 @@ export const Route = createFileRoute("/_authenticated/admin/institutions")({
   component: InstitutionLeague,
 });
 
+const SALARY_MID: Record<string, number> = {
+  "20-40k": 30000,
+  "40-60k": 50000,
+  "60-90k": 75000,
+  "90k+": 110000,
+};
+
 function InstitutionLeague() {
   const { data, isLoading } = useQuery({
     queryKey: ["admin-institutions"],
     queryFn: async () => {
       const [insts, programs, outcomes] = await Promise.all([
-        supabase.from("institutions").select("id,name,city"),
+        supabase.from("institutions").select("id,name,district,type"),
         supabase.from("programs").select("id,institution_id,name"),
-        supabase
-          .from("graduate_outcomes")
-          .select("program_id,cohort_year,placement_rate,median_salary,cohort_size"),
+        supabase.from("graduate_outcomes").select("program_id,grad_year,status,salary_band"),
       ]);
       return {
         insts: insts.data ?? [],
@@ -34,19 +39,19 @@ function InstitutionLeague() {
     const progs = data.programs.filter((p) => p.institution_id === inst.id);
     const progIds = new Set(progs.map((p) => p.id));
     const outs = data.outcomes.filter((o) => progIds.has(o.program_id as string));
-    const avgPlace = outs.length
-      ? outs.reduce((s, o) => s + Number(o.placement_rate ?? 0), 0) / outs.length
-      : 0;
-    const avgSal = outs.length
-      ? outs.reduce((s, o) => s + Number(o.median_salary ?? 0), 0) / outs.length
-      : 0;
-    const grads = outs.reduce((s, o) => s + Number(o.cohort_size ?? 0), 0);
+    const placed = outs.filter((o) => o.status !== "unemployed").length;
+    const avgPlace = outs.length ? (placed / outs.length) * 100 : 0;
+    const sals = outs
+      .map((o) => SALARY_MID[o.salary_band as string])
+      .filter((n): n is number => typeof n === "number");
+    const avgSal = sals.length ? sals.reduce((a, b) => a + b, 0) / sals.length : 0;
     return {
       id: inst.id,
       name: inst.name,
-      city: inst.city,
+      district: inst.district,
+      type: inst.type,
       programs: progs.length,
-      grads,
+      grads: outs.length,
       avgPlace,
       avgSal,
     };
@@ -55,7 +60,7 @@ function InstitutionLeague() {
   const sorted = [...rows].sort((a, b) => b.avgPlace - a.avgPlace);
 
   const grade = (p: number) =>
-    p >= 75 ? "A" : p >= 65 ? "B" : p >= 55 ? "C" : p >= 45 ? "D" : "F";
+    p >= 80 ? "A" : p >= 70 ? "B" : p >= 60 ? "C" : p >= 50 ? "D" : "F";
   const gradeTone = (g: string) =>
     g === "A"
       ? "bg-emerald-500/15 text-emerald-700"
@@ -79,27 +84,13 @@ function InstitutionLeague() {
         <table className="w-full min-w-[640px] text-sm">
           <thead className="border-b border-border bg-secondary/50">
             <tr>
-              <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-                Rank
-              </th>
-              <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-                Institution
-              </th>
-              <th className="px-4 py-3 text-right text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-                Programs
-              </th>
-              <th className="px-4 py-3 text-right text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-                Graduates
-              </th>
-              <th className="px-4 py-3 text-right text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-                Placement
-              </th>
-              <th className="px-4 py-3 text-right text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-                Median Salary (BDT)
-              </th>
-              <th className="px-4 py-3 text-center text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-                Grade
-              </th>
+              <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-muted-foreground">Rank</th>
+              <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-muted-foreground">Institution</th>
+              <th className="px-4 py-3 text-right text-xs font-semibold uppercase tracking-wider text-muted-foreground">Programs</th>
+              <th className="px-4 py-3 text-right text-xs font-semibold uppercase tracking-wider text-muted-foreground">Graduates</th>
+              <th className="px-4 py-3 text-right text-xs font-semibold uppercase tracking-wider text-muted-foreground">Placement</th>
+              <th className="px-4 py-3 text-right text-xs font-semibold uppercase tracking-wider text-muted-foreground">Avg Salary (BDT)</th>
+              <th className="px-4 py-3 text-center text-xs font-semibold uppercase tracking-wider text-muted-foreground">Grade</th>
             </tr>
           </thead>
           <tbody>
@@ -110,20 +101,18 @@ function InstitutionLeague() {
                   <td className="px-4 py-3 font-bold text-muted-foreground">#{i + 1}</td>
                   <td className="px-4 py-3">
                     <div className="font-semibold">{r.name}</div>
-                    <div className="text-[11px] text-muted-foreground">{r.city}</div>
+                    <div className="text-[11px] text-muted-foreground">
+                      {r.type} · {r.district}
+                    </div>
                   </td>
                   <td className="px-4 py-3 text-right tabular-nums">{r.programs}</td>
                   <td className="px-4 py-3 text-right tabular-nums">{r.grads}</td>
-                  <td className="px-4 py-3 text-right tabular-nums font-bold">
-                    {r.avgPlace.toFixed(1)}%
-                  </td>
+                  <td className="px-4 py-3 text-right tabular-nums font-bold">{r.avgPlace.toFixed(1)}%</td>
                   <td className="px-4 py-3 text-right tabular-nums">
                     {r.avgSal ? `৳${Math.round(r.avgSal).toLocaleString()}` : "—"}
                   </td>
                   <td className="px-4 py-3 text-center">
-                    <span
-                      className={`inline-grid h-7 w-7 place-items-center rounded-full text-xs font-bold ${gradeTone(g)}`}
-                    >
+                    <span className={`inline-grid h-7 w-7 place-items-center rounded-full text-xs font-bold ${gradeTone(g)}`}>
                       {g}
                     </span>
                   </td>

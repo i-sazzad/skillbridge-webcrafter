@@ -34,10 +34,10 @@ function AdminOverview() {
     queryFn: async () => {
       const [skills, listings, institutions, employers, outcomes, programs] = await Promise.all([
         supabase.from("skills").select("name,category,demand_index,trend"),
-        supabase.from("listings").select("id,sector,location,status"),
+        supabase.from("listings").select("id,district,status,employer_id"),
         supabase.from("institutions").select("id,name"),
         supabase.from("employers").select("id,name,sector"),
-        supabase.from("graduate_outcomes").select("cohort_year,placement_rate"),
+        supabase.from("graduate_outcomes").select("program_id,grad_year,status"),
         supabase.from("programs").select("id"),
       ]);
       return {
@@ -56,17 +56,15 @@ function AdminOverview() {
   }
 
   const activeListings = data.listings.filter((l) => l.status === "active").length;
-  const avgPlacement =
-    data.outcomes.length > 0
-      ? Math.round(
-          data.outcomes.reduce((s, o) => s + Number(o.placement_rate ?? 0), 0) /
-            data.outcomes.length,
-        )
-      : 0;
+  const placedCount = data.outcomes.filter(
+    (o) => o.status === "employed" || o.status === "further_study" || o.status === "freelance",
+  ).length;
+  const avgPlacement = data.outcomes.length
+    ? Math.round((placedCount / data.outcomes.length) * 100)
+    : 0;
   const risingSkills = data.skills.filter((s) => s.trend === "rising").length;
   const decliningSkills = data.skills.filter((s) => s.trend === "declining").length;
 
-  // Top demand by category
   const byCat: Record<string, { sum: number; n: number }> = {};
   data.skills.forEach((s) => {
     byCat[s.category] = byCat[s.category] ?? { sum: 0, n: 0 };
@@ -97,7 +95,7 @@ function AdminOverview() {
         <Kpi icon={Activity} label="Skills tracked" value={data.skills.length} />
         <Kpi icon={Briefcase} label="Active listings" value={activeListings} sub={`${data.employers.length} employers`} />
         <Kpi icon={Building2} label="Institutions" value={data.institutions.length} sub={`${data.programs.length} programs`} />
-        <Kpi icon={GraduationCap} label="Avg placement" value={`${avgPlacement}%`} sub={`${data.outcomes.length} cohorts`} />
+        <Kpi icon={GraduationCap} label="Placement rate" value={`${avgPlacement}%`} sub={`${data.outcomes.length} graduates tracked`} />
       </div>
 
       <div className="grid gap-6 lg:grid-cols-3">

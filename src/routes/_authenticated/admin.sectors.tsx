@@ -14,8 +14,8 @@ function SectorHeatmap() {
     queryKey: ["admin-sectors"],
     queryFn: async () => {
       const [listings, employers] = await Promise.all([
-        supabase.from("listings").select("id,sector,location,status"),
-        supabase.from("employers").select("id,sector,name"),
+        supabase.from("listings").select("id,district,status,employer_id"),
+        supabase.from("employers").select("id,sector,name,district"),
       ]);
       return { listings: listings.data ?? [], employers: employers.data ?? [] };
     },
@@ -23,38 +23,39 @@ function SectorHeatmap() {
 
   if (isLoading || !data) return <div className="text-sm text-muted-foreground">Loading…</div>;
 
-  const sectors = Array.from(
-    new Set([
-      ...data.listings.map((l) => l.sector).filter(Boolean),
-      ...data.employers.map((e) => e.sector).filter(Boolean),
-    ]),
-  ) as string[];
+  const empById: Record<string, { sector: string; name: string }> = {};
+  data.employers.forEach((e) => (empById[e.id] = { sector: e.sector, name: e.name }));
 
-  const locations = Array.from(
-    new Set(data.listings.map((l) => l.location).filter(Boolean)),
+  const enriched = data.listings.map((l) => ({
+    ...l,
+    sector: empById[l.employer_id as string]?.sector ?? "Other",
+  }));
+
+  const sectors = Array.from(
+    new Set([...enriched.map((l) => l.sector), ...data.employers.map((e) => e.sector)]),
+  );
+  const districts = Array.from(
+    new Set(enriched.map((l) => l.district).filter(Boolean)),
   ) as string[];
 
   const matrix: Record<string, Record<string, number>> = {};
   sectors.forEach((s) => {
     matrix[s] = {};
-    locations.forEach((loc) => {
-      matrix[s][loc] = data.listings.filter(
-        (l) => l.sector === s && l.location === loc && l.status === "active",
+    districts.forEach((loc) => {
+      matrix[s][loc] = enriched.filter(
+        (l) => l.sector === s && l.district === loc && l.status === "active",
       ).length;
     });
   });
 
-  const max = Math.max(
-    1,
-    ...sectors.flatMap((s) => locations.map((loc) => matrix[s][loc] ?? 0)),
-  );
+  const max = Math.max(1, ...sectors.flatMap((s) => districts.map((loc) => matrix[s][loc] ?? 0)));
 
   const tone = (n: number) => {
     if (n === 0) return "bg-secondary/40 text-muted-foreground";
-    const intensity = n / max;
-    if (intensity > 0.7) return "bg-primary text-primary-foreground";
-    if (intensity > 0.4) return "bg-primary/60 text-primary-foreground";
-    if (intensity > 0.15) return "bg-primary/30 text-foreground";
+    const i = n / max;
+    if (i > 0.7) return "bg-primary text-primary-foreground";
+    if (i > 0.4) return "bg-primary/60 text-primary-foreground";
+    if (i > 0.15) return "bg-primary/30 text-foreground";
     return "bg-primary/15 text-foreground";
   };
 
@@ -64,7 +65,7 @@ function SectorHeatmap() {
         <Badge variant="secondary" className="mb-2">Sector × Geography</Badge>
         <h1 className="text-3xl font-extrabold tracking-tight">Where the demand is</h1>
         <p className="text-sm text-muted-foreground">
-          Active listings concentrated by sector and city. Use this to spot regional hiring surges.
+          Active listings concentrated by sector and district. Use this to spot regional hiring surges.
         </p>
       </div>
 
@@ -75,11 +76,8 @@ function SectorHeatmap() {
               <th className="text-left text-xs font-semibold uppercase tracking-wider text-muted-foreground">
                 Sector
               </th>
-              {locations.map((loc) => (
-                <th
-                  key={loc}
-                  className="text-center text-xs font-semibold uppercase tracking-wider text-muted-foreground"
-                >
+              {districts.map((loc) => (
+                <th key={loc} className="text-center text-xs font-semibold uppercase tracking-wider text-muted-foreground">
                   {loc}
                 </th>
               ))}
@@ -90,17 +88,15 @@ function SectorHeatmap() {
           </thead>
           <tbody>
             {sectors.map((s) => {
-              const rowTotal = locations.reduce((acc, loc) => acc + (matrix[s][loc] ?? 0), 0);
+              const rowTotal = districts.reduce((acc, loc) => acc + (matrix[s][loc] ?? 0), 0);
               return (
                 <tr key={s}>
                   <td className="py-1 pr-3 font-medium">{s}</td>
-                  {locations.map((loc) => {
+                  {districts.map((loc) => {
                     const n = matrix[s][loc] ?? 0;
                     return (
                       <td key={loc} className="p-0">
-                        <div
-                          className={`grid h-10 place-items-center rounded-md text-sm font-bold ${tone(n)}`}
-                        >
+                        <div className={`grid h-10 place-items-center rounded-md text-sm font-bold ${tone(n)}`}>
                           {n || ""}
                         </div>
                       </td>
