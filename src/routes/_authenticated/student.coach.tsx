@@ -33,15 +33,22 @@ function CoachPage() {
     () =>
       new DefaultChatTransport({
         api: "/api/coach",
-        headers: () => (token ? { Authorization: `Bearer ${token}` } : ({} as Record<string, string>)),
+        fetch: async (input, init) => {
+          const { data } = await supabase.auth.getSession();
+          const tok = data.session?.access_token;
+          const headers = new Headers(init?.headers);
+          if (tok) headers.set("Authorization", `Bearer ${tok}`);
+          return fetch(input, { ...init, headers });
+        },
       }),
-    [token],
+    [],
   );
 
   const { messages, sendMessage, status, error } = useChat({
     id: "coach",
     transport,
   });
+
 
 
   const [input, setInput] = useState("");
