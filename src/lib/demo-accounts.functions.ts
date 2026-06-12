@@ -7,10 +7,13 @@ const DEMOS = {
   student: { email: "student@demo.com", full_name: "Anika Rahman" },
   institution: { email: "institution@demo.com", full_name: "Dhaka Polytechnic Admin" },
   employer: { email: "employer@demo.com", full_name: "PathaoTech Recruiter" },
+  admin: { email: "admin@demo.com", full_name: "Workforce Ministry Analyst" },
 } as const;
 
 export const ensureDemoAccount = createServerFn({ method: "POST" })
-  .inputValidator((d) => z.object({ role: z.enum(["student", "institution", "employer"]) }).parse(d))
+  .inputValidator((d) =>
+    z.object({ role: z.enum(["student", "institution", "employer", "admin"]) }).parse(d),
+  )
   .handler(async ({ data }) => {
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
     const demo = DEMOS[data.role];
