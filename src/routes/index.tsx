@@ -322,7 +322,7 @@ function Landing() {
             <span>SkillBridge AI · © 2026</span>
           </div>
           <div className="rounded-full border border-border bg-secondary/50 px-3 py-1 text-xs font-medium">
-            Built at Bangladesh AI Build Fest 2026
+            Built at The Infinity AI Build Fest 2026
           </div>
         </div>
       </footer>
