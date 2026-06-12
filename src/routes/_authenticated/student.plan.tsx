@@ -26,22 +26,23 @@ function PlanPage() {
     (async () => {
       const { data } = await supabase
         .from("course_skills")
-        .select("skill_id,courses(id,name,programs(name))");
+        .select("skill_id,courses(id,title,programs(name))");
       setCourses(
         ((data ?? []) as Array<{
           skill_id: string;
-          courses: { id: string; name: string; programs: { name: string } | null } | null;
+          courses: { id: string; title: string; programs: { name: string } | null } | null;
         }>)
           .filter((r) => r.courses)
           .map((r) => ({
             skill_id: r.skill_id,
             course_id: r.courses!.id,
-            course_name: r.courses!.name,
+            course_name: r.courses!.title,
             program_name: r.courses!.programs?.name ?? "",
           })),
       );
     })();
   }, []);
+
 
   const gaps = useMemo(
     () =>
